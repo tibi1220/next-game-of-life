@@ -77,8 +77,22 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     setGridHistory(prevHistory => {
+      const idx = prevHistory.length - 1;
+
       prevHistory = prevHistory.map(grid => grid.map(row => row.slice()));
-      prevHistory.push(generateEmptyGrid(rows, cols));
+      const newGrid = generateEmptyGrid(rows, cols);
+
+      prevHistory.push(
+        newGrid.map((row, i) =>
+          row.map((cell, j) => {
+            if (i < prevHistory[idx].length && j < prevHistory[idx][0].length) {
+              return prevHistory[idx][i][j];
+            }
+
+            return cell;
+          })
+        )
+      );
 
       return prevHistory;
     });
@@ -232,7 +246,8 @@ const Home: NextPage = () => {
             id="cols"
             value={cols}
             onChange={e => {
-              setCols(parseInt(e.target.value));
+              const value = parseInt(e.target.value);
+              setCols(value > 0 ? value : 15);
             }}
           />
         </div>
@@ -248,7 +263,8 @@ const Home: NextPage = () => {
             id="rows"
             value={rows}
             onChange={e => {
-              setRows(parseInt(e.target.value));
+              const value = parseInt(e.target.value);
+              setRows(value > 0 ? value : 15);
             }}
           />
         </div>
@@ -263,7 +279,8 @@ const Home: NextPage = () => {
             id="tick"
             value={tick}
             onChange={e => {
-              setTick(parseInt(e.target.value));
+              const value = parseInt(e.target.value);
+              setTick(value > 0 ? value : 300);
             }}
           />
         </div>
@@ -278,7 +295,8 @@ const Home: NextPage = () => {
             id="percentile"
             value={percentile}
             onChange={e => {
-              setPercentile(parseInt(e.target.value));
+              const value = parseInt(e.target.value);
+              setPercentile(value > 0 ? value : 25);
             }}
           />
         </div>
